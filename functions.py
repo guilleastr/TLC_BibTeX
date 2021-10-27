@@ -14,21 +14,23 @@ def applyER_text(ER,file):
         line = f.readline()
         while line:
             if (m := re.search(ER,line)):
-                matches.append(m)
+                matches.append(m.group())
             line = f.readline()
         f.close()
     return matches
 
 def split_array(array,i,j):
-    return array[i:j]
+    for k,a in enumerate(array):
+        array[k] = a[i:j]
+    return array
 
 
 def count_matches(matches):
     dic = {}
     for match in matches:
         try:
-            dic[match.group()] += 1
+            dic[match] += 1
         except:
-            dic[match.group()] = 1
+            dic[match] = 1
     
     return dic
