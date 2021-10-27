@@ -14,10 +14,12 @@ def applyER_text(ER,file):
         f.close()
     return matches
 
-
+def document_cration(matches):
+    
+    return ""
 
 htmli.write_to_file(applyER_text(r'@[a-zA-Z]+',PATH+file), "1.html")
-htmli.write_to_file(applyER_text(r'\{[a-zA-Z0-9.:\-\\]+,\n',PATH+file),"2.html")
+htmli.write_document(applyER_text(r'\{[a-zA-Z0-9.:\-\\]+,\n',PATH+file),"2.html")
 
 
 
