@@ -49,6 +49,7 @@ def write_to_file(matches,file):
     text= convert2HTML(count_matches(matches))
     write_file(text,file)
 
+
 def parse_search(matches,file):
     return convert2HTML(count_matches(matches))
 
