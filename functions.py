@@ -19,9 +19,9 @@ def applyER_text(ER,file):
         f.close()
     return matches
 
-def split_array(array,i,j):
+def split_array(array,er,sub):
     for k,a in enumerate(array):
-        array[k] = a[i:j]
+        array[k] = re.sub(er,sub,a)
     return array
 
 

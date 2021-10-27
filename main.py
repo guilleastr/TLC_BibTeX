@@ -10,7 +10,7 @@ AUTHOR_ER = r'author[ \t]*=[ \t]*[{"][^}"]+[\n\t ]*[}"]' #Verificar RODRIGO
 TITLE_ER = r' title[ \t]*=[ \t]*[{"][^}"]+[\n\t ]*[}"]' #Verificar RODRIGO
 
 if __name__ == '__main__':
-    categories = split_array(applyER_text(CATEGORY_ER,FILE),1,-1)
+    categories = split_array(applyER_text(CATEGORY_ER,FILE),'@','')
     keys = applyER_text(KEY_ER,FILE)
     authors = [[]]*len(keys) #Modificar com as ER
     titles = ['title']*len(keys) #Modificar com as ER
