@@ -11,15 +11,21 @@ class Document:
 def applyER_text(ER,file):
     matches = []
     with open(file,'r',encoding='UTF-8') as f:
-        line = f.readline()
-        while line:
-            if (m := re.search(ER,line)):
-                matches.append(m.group())
-            line = f.readline()
+        text = f.read()
         f.close()
+
+    while m:=re.search(ER,text):
+        text = text[m.end()+1:]
+        matches.append(m.group())
     return matches
 
-def split_array(array,er,sub):
+def split_array(array,er):
+    for k,a in enumerate(array):
+        array[k] = re.split(er,a)
+    return array
+
+
+def sub_array(array,er,sub):
     for k,a in enumerate(array):
         array[k] = re.sub(er,sub,a)
     return array
