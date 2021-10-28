@@ -7,6 +7,16 @@ class Document:
         self.authors = authors
         self.title = title
 
+    def extract_authors(self):
+        to_ret=[]
+        i=1
+        for auth in self.authors: 
+            i+=1
+            if(i<len(self.authors)>1):
+                to_ret.append(auth)
+
+        return to_ret
+
 PATH = ''
 file = 'exemplo-utf8.bib'
 

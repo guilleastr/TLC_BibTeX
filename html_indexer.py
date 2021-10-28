@@ -11,7 +11,7 @@ def write_file(text, filename):
         else:    
             html+=str(line)    
 
-    with open(filename,'w') as f:
+    with open(filename,'w',encoding="utf-8") as f:
         f.write(html)
         f.close()
     c.close()
@@ -44,10 +44,17 @@ def parse_document(doc):
         if(i<len(doc.authors)>1):
             authors+=","
 
-    s="<strong>"+str(doc.title)+"</strong>"
+    s='<div id="box" align="center"><div text-align="left">'
+    s+="<strong>"+str(doc.title)+"</strong>"
+    for i in range(1,len(list(authors))):
+        if(i % 40==0):
+            authors=str(authors[:i])+"-\n"+str(authors[i:])
+        i+=1
     s+="<p> Autores:"+str(authors)+" </p>"
     s+="<p> Categoría:"+str(doc.category)  +" </p>"
     s+="<p> Clave:"+str(doc.key)+" </p>"
+    s+="</div></div>"
+    return s
 
 
 def write_document(documents,file):
