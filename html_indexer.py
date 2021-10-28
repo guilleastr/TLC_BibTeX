@@ -24,34 +24,16 @@ def convert2HTML(dic):
     s += '</UL>'
     return s
 
-##deprecated
-def convert2HTMLchave(dic):
-    s = '<UL>\n'
-    tags = [x for x in dic]
-    for tag in tags:
-        s += f'\t<LI>{tag[1:-2]}: {dic[tag]}</LI>\n'
-    s += '</UL>'
-    return s
-    
-def count_matches(matches):
-    dic = {}
-    for match in matches:
-        ### Easier to clean the dic in advance, so we dont need two functions
-        tag=str(match.group()).replace("{","").replace(",","").replace("\n", "")
-        try:
-            dic[tag] += 1
-        except:
-            dic[tag] = 1
-    
-    return dic
 
-def write_to_file(matches,file):
-    text= convert2HTML(count_matches(matches))
+
+
+def write_to_file(dic,file):
+    text= convert2HTML(dic)
     write_file(text,file)
 
 
 def parse_search(matches,file):
-    return convert2HTML(count_matches(matches))
+    return convert2HTML(matches)
 
 def parse_document(doc):
     authors=""

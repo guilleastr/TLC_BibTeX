@@ -7,7 +7,6 @@ class Document:
         self.authors = authors
         self.title = title
 
-import html_indexer as htmli
 PATH = ''
 file = 'exemplo-utf8.bib'
 
@@ -38,13 +37,5 @@ def count_matches(matches):
 def document_cration(matches):
     
     return ""
-
-htmli.write_to_file(applyER_text(r'@[a-zA-Z]+',PATH+file), "1.html")
-htmli.write_document(applyER_text(r'\{[a-zA-Z0-9.:\-\\]+,\n',PATH+file),"2.html")
-
-
-
-
-
 
 

@@ -1,5 +1,5 @@
 from functions import Document, applyER_text, count_matches, split_array
-
+import html_indexer as htmli
 PATH = ''
 FILENAME = 'exemplo-utf8.bib'
 FILE = PATH+FILENAME
@@ -17,5 +17,10 @@ if __name__ == '__main__':
 
     DOCUMENTS = [Document(categories[i],authors[i],titles[i],keys[i]) for i in range(len(keys))] #Array de Documentos
 
+
+
     dic_categories = count_matches(categories) #Diccionario con las categorias y sus respectivos matches
-    
+    htmli.write_to_file(dic_categories,"Exercise1.html")
+
+    htmli.write_document(DOCUMENTS,"documents.html")
+
