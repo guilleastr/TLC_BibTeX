@@ -8,7 +8,7 @@ class Document:
         self.title = title
 
 
-def applyER_text(ER,file):
+def applyER_text(ER,file,ngroup=0):
     matches = []
     with open(file,'r',encoding='UTF-8') as f:
         text = f.read()
@@ -16,7 +16,7 @@ def applyER_text(ER,file):
 
     while m:=re.search(ER,text):
         text = text[m.end()+1:]
-        matches.append(m.group())
+        matches.append(m.group(ngroup))
     return matches
 
 def split_array(array,er):
