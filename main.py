@@ -7,15 +7,14 @@ FILE = PATH+FILENAME
 CATEGORY_ER = r'@([a-zA-Z]+)'
 KEY_ER = r'\{([a-zA-Z0-9.:\-\\]+),\n'
 AUTHOR_ER = r'(?i:author)[ \t]*=[ \t]*[{"]([^}"]+)[\n\t ]*[}"]' 
-TITLE_ER = r' (?i:title)[ \t]*=([ \t]*[{"][^}"]+)[\n\t ]*[}"]' #Verificar RODRIGO
+TITLE_ER = r' (?i:title)[ \t]*=[ \t]*((.+?|[\n\t ])*?)(?=[}"] ?,)'
 
-#alternativa title  [^a-z]title[ \t]*=[ \t]*[{"][^(",)]+[\n\t ]*[}"]
 
 if __name__ == '__main__':
     categories =applyER_text(CATEGORY_ER,FILE,1)
     keys = applyER_text(KEY_ER,FILE,1)
-    authors = split_array(sub_array(applyER_text(AUTHOR_ER,FILE,1),r'[ \n\t]+'," "),'[ ]+and[ ]+')
-    titles = ['title']*len(keys)
+    authors = split_array(sub_array(sub_array(sub_array(applyER_text(AUTHOR_ER,FILE,1),r'[ \n\t]+'," "),r'^ ',r''),r'([ ]+and)([ ]+and[ ]*)',r'\2'),'[ ]+and[ ]*')
+    titles = sub_array(sub_array(applyER_text(TITLE_ER,FILE,1),r'^[{"]',""),r'[\n\t ]+',r' ')
 
     DOCUMENTS = [Document(categories[i],authors[i],titles[i],keys[i]) for i in range(len(keys))] #Array de Documentos
 
@@ -32,3 +31,5 @@ if __name__ == '__main__':
     
     for auth in dic_authors:
         dic_authors[auth].print_author()
+
+#print(authors)
