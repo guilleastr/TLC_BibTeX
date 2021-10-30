@@ -6,7 +6,38 @@ class Document:
         self.key = key
         self.authors = authors
         self.title = title
+    
+    
+class Author:
+    def __init__(self,author):
+        self.author = author
+        self.publications = []
+        self.colaborators = {}
 
+    def add_colaborator(self,name,val=1):
+        try:
+            self.colaborators[name] += val
+        except:
+            self.colaborators[name] = 1
+
+    def add_publication(self,doc):
+        self.publications.append(doc.title)
+        for auth in doc.authors:
+            if auth != self.author:
+                self.add_colaborator(auth)
+    
+    def concat_author(self, author):
+        self.publications += author.publications
+        for colab in author.colaborators:
+            self.add_colaborator(colab,author.colaborators[colab])
+    
+    def print_author(self):
+        print(f'{self.author}:\n\tPublicaciones:')
+        for pub in self.publications:
+            print(f'\t -{pub}')
+        print(f'\tColaboradores:')
+        for colab in self.colaborators:
+            print(f'\t -{colab} = {self.colaborators[colab]}')
 
 def applyER_text(ER,file,ngroup=0):
     matches = []
@@ -38,5 +69,4 @@ def count_matches(matches):
             dic[match] += 1
         except:
             dic[match] = 1
-    
     return dic
