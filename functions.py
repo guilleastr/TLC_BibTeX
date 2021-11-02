@@ -3,13 +3,14 @@ import numpy as np
 
 EXTRACT_NAME_ER = r'([A-Z])(.+ +)+(.+)$'
 CORRECT_NAME_ER = r'(.+), *(.+)'
+SPECIAL_CHARS_ER = r"\\([´`~^'][aeiou])"
 
 class Document:
     def __init__(self,category,authors,title,key):
         self.category = category
         self.key = key
-        self.authors = sub_array(sub_array(authors,CORRECT_NAME_ER,r'\2 \1'),r' $',r'')
-        self.title = title
+        self.authors = sub_array(sub_array(sub_array(authors,CORRECT_NAME_ER,r'\2 \1'),r' $',r''),SPECIAL_CHARS_ER,get_specialchars)
+        self.title = re.sub(SPECIAL_CHARS_ER,get_specialchars,title)
     
 class Person:
     def __init__(self,name):
@@ -172,3 +173,51 @@ def count_matches(matches):
         except:
             dic[match] = 1
     return dic
+
+special_chars = {
+    "~a" : "ã",
+    "´a" : "á",
+    "`a" : "à",
+    "^a" : "â",
+    "'a" : "á",
+    "´e" : "é",
+    "`e" : "è",
+    "^e" : "ê",
+    "'e" : "é",
+    "´i" : "í",
+    "`i" : "ì",
+    "^i" : "î",
+    "~o" : "õ",
+    "´o" : "ó",
+    "`o" : "ò",
+    "^o" : "ô",
+    "'o" : "ó",
+    "´u" : "ú",
+    "`u" : "ù",
+    "^u" : "û",
+    "~A" : "Ã",
+    "´A" : "Á",
+    "`A" : "À",
+    "^A" : "Â",
+    "'A" : "Á",
+    "´E" : "É",
+    "`E" : "È",
+    "^E" : "Ê",
+    "'E" : "É",
+    "´I" : "Í",
+    "`I" : "Ì",
+    "^I" : "Î",
+    "~O" : "Õ",
+    "´O" : "Ó",
+    "`O" : "Ò",
+    "^O" : "Ô",
+    "'O" : "Ó",
+    "´U" : "Ú",
+    "`U" : "Ù",
+    "^U" : "Û",
+}
+
+def get_specialchars(m):
+    special_char = m[1]
+    trade_char = special_chars[special_char]
+    return trade_char
