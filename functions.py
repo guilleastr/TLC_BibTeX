@@ -26,21 +26,21 @@ class Person:
             if '.' in self.FirstName:
                 if len(self.FirstName) > 2:
                     self.middle_inicial = self.FirstName[-2]
-                self.Name += self.FirstName[:1]+'. '
+                self.Name += self.FirstName+' '
                 self.FirstName = None
             else:
                 self.Name += self.FirstName+' '
             if len(splits)>2:
                 self.MiddleName = ""
                 for s in splits[1:-1]:
-                    self.MiddleName += s
+                    self.MiddleName += s+' '
                 if '.' in self.MiddleName:
-                    self.middle_inicial = self.MiddleName[:-1]
+                    self.middle_inicial = re.sub(r'[. ]','',self.MiddleName)
                     self.MiddleName = None
                     self.Name += self.middle_inicial+'. '
                 else:
                     self.middle_inicial = self.MiddleName[0]
-                    self.Name += self.MiddleName+' '
+                    self.Name += self.MiddleName
             else:
                 self.MiddleName = None
             self.LastName = f'{match.group(3)}{match.group(4)}'

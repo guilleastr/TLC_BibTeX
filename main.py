@@ -16,7 +16,7 @@ EXTRACT_NAME_ER = r'([A-Z])(.+ +)+(.+)$'
 if __name__ == '__main__':
     categories =applyER_text(CATEGORY_ER,FILE,1)
     keys = applyER_text(KEY_ER,FILE,1)
-    authors = split_array(sub_array(sub_array(sub_array(applyER_text(AUTHOR_ER,FILE,1),r'[ \n\t{]+'," "),r'^ ',r''),r'([ ]+and)([ ]+and[ ]*)',r'\2'),'[ ]+and[ ]*')
+    authors = split_array(sub_array(sub_array(sub_array(applyER_text(AUTHOR_ER,FILE,1),r'[ \-\n\t{]+'," "),r'^ ',r''),r'([ ]+and)([ ]+and[ ]*)',r'\2'),'[ ]+and[ ]*')
     titles = sub_array(sub_array(applyER_text(TITLE_ER,FILE,1),r'^[{"]',""),r'[\n\t ]+',r' ')
 
     DOCUMENTS = [Document(categories[i],authors[i],titles[i],keys[i]) for i in range(len(keys))] #Array de Documentos
@@ -53,7 +53,7 @@ if __name__ == '__main__':
         except:
             dic_names[dic_authors[a].get_iniciales()] = [dic_authors[a]]
     
-
-    for a in authors:
-        dic_authors[a].clean_authors(dic_names)
-        dic_authors[a].print_author()
+    with open('authors.txt','w',encoding='UTF-8') as f:
+        for a in authors:
+            dic_authors[a].clean_authors(dic_names)
+            print(dic_authors[a].get_name(),file=f)
