@@ -1,37 +1,59 @@
-from functions import Document, applyER_text, count_matches, sub_array ,split_array
-import html_indexer as htmli
-from grafo import Grafo
+import enum
+from functions import Author, Document, applyER_text, count_matches, sub_array ,split_array, search_array
+import re
+
 PATH = ''
 FILENAME = 'exemplo-utf8.bib'
 FILE = PATH+FILENAME
 
-CATEGORY_ER = r'@[a-zA-Z]+'
-KEY_ER = r'\{[a-zA-Z0-9.:\-\\]+,\n'
-AUTHOR_ER = r'(?i:author)[ \t]*=[ \t]*[{"][^}"]+[\n\t ]*[}"]' #Verificar RODRIGO
-TITLE_ER = r' title[ \t]*=[ \t]*[{"][^}"]+[\n\t ]*[}"]' #Verificar RODRIGO
+CATEGORY_ER = r'@([a-zA-Z]+)'
+KEY_ER = r'\{([a-zA-Z0-9.:\-\\]+),\n'
+AUTHOR_ER = r'(?i:author)[ \t]*=[ \t]*[{"]([^}"]+)[\n\t ]*[}"]' 
+TITLE_ER = r' (?i:title)[ \t]*=[ \t]*((.+?|[\n\t ])*?)(?=[}"] ?,)'
+EXTRACT_NAME_ER = r'([A-Z])(.+ +)+(.+)$'
+
 
 if __name__ == '__main__':
-    categories = sub_array(applyER_text(CATEGORY_ER,FILE),'@','')
-    keys = sub_array(applyER_text(KEY_ER,FILE),r'[{,\n]','')
-    authors = split_array(sub_array(applyER_text(AUTHOR_ER,FILE),r'((?i:author)[ \t]*=[ \t]*[{"]|[{}"\n]*)',''),'[ ]+and[ ]+.*')
-    titles = ['title']*len(keys) #Modificar com as ER
+    categories =applyER_text(CATEGORY_ER,FILE,1)
+    keys = applyER_text(KEY_ER,FILE,1)
+    authors = split_array(sub_array(sub_array(sub_array(applyER_text(AUTHOR_ER,FILE,1),r'[ \-\n\t{]+'," "),r'^ ',r''),r'([ ]+and)([ ]+and[ ]*)',r'\2'),'[ ]+and[ ]*')
+    titles = sub_array(sub_array(applyER_text(TITLE_ER,FILE,1),r'^[{"]',""),r'[\n\t ]+',r' ')
 
     DOCUMENTS = [Document(categories[i],authors[i],titles[i],keys[i]) for i in range(len(keys))] #Array de Documentos
 
     dic_categories = count_matches(categories) #Diccionario con las categorias y sus respectivos matches
-    #htmli.write_to_file(dic_categories, "exercise1.html")
-
-    #htmli.write_document(DOCUMENTS,"exercise2.html")
-
-
-    grafo = Grafo()
-    names=[]
+    dic_authors = {}
     for doc in DOCUMENTS:
-        
         for auth in doc.authors:
-            print(auth)
-            names.append(auth)
-    names=list(set(names))
-    print(names)
-    grafo.load_names(names)
-    #print(grafo.nodos)
+            aux_auth = Author(auth)
+            aux_auth.add_publication(doc)
+            try:
+                dic_authors[auth].concat_author(aux_auth)
+            except:
+                dic_authors[auth] = aux_auth
+    
+    authors = list(dic_authors.keys())
+    for auth in authors:
+        for bauth in authors:
+            if auth == bauth:
+                continue
+            if dic_authors[auth].is_samePerson(dic_authors[bauth]):
+                if len(bauth) > len(auth):
+                    auth,bauth = bauth,auth
+                dic_authors[auth].concat_author(dic_authors[bauth])
+                dic_authors.pop(bauth)
+                authors.remove(bauth)
+
+    authors = list(dic_authors.keys())
+    authors.sort()
+    dic_names = {}
+    for a in authors:
+        try:
+            dic_names[dic_authors[a].get_iniciales()] += [dic_authors[a]]
+        except:
+            dic_names[dic_authors[a].get_iniciales()] = [dic_authors[a]]
+    
+    with open('authors.txt','w',encoding='UTF-8') as f:
+        for a in authors:
+            dic_authors[a].clean_authors(dic_names)
+            print(dic_authors[a].get_name(),file=f)
