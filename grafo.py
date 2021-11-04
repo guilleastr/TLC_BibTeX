@@ -34,6 +34,8 @@ class Grafo:
 
         self.make_bidiretional()
 
+
+
     def make_bidiretional(self):
         for i in range(0,len(self.nodos)):
             for j in range(0,len(self.nodos)):
